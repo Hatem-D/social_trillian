@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chirp;
+use App\Http\Requests\ChirpMessageValidationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -33,12 +34,9 @@ class ChirpController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(ChirpMessageValidationRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
-        ]);
-        $request->user()->chirps()->create($validated);
+        $request->user()->chirps()->create($request->validated());
         return redirect(route('chirps.index'));
     }
 
@@ -61,12 +59,10 @@ class ChirpController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Chirp $chirp): RedirectResponse
+    public function update(ChirpMessageValidationRequest $request, Chirp $chirp): RedirectResponse
     {
         Gate::authorize('update', $chirp);
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
-        ]);
+        $validated = $request->validated();
         $chirp->update($validated);
         return redirect(route('chirps.index'));
     }

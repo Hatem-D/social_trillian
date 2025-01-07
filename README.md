@@ -12,6 +12,9 @@ node v22.12.0
 
 => localhost
 
+_To send emails and notifications :_
+- php artisan queue:work 
+
 
 
 
